@@ -2,6 +2,8 @@ package com.alkemy.disney.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,6 +16,8 @@ import java.util.Set;
 @Table(name = "pelicula")
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE pelicula SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 public class PeliculaEntity {
 
     @Id
@@ -31,12 +35,7 @@ public class PeliculaEntity {
     @Range(min = 1, max = 5)
     private Integer calificacion;
 
-    @ManyToOne(
-            fetch = FetchType.EAGER,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
+    @ManyToOne( fetch = FetchType.EAGER)
     @JoinColumn(name = "genero_id", insertable = false, updatable = false)
     private GeneroEntity genero;
 
@@ -54,5 +53,17 @@ public class PeliculaEntity {
             joinColumns = @JoinColumn(name = "pelicula_id"),
             inverseJoinColumns = @JoinColumn(name = "personaje_id"))
     private Set<PersonajeEntity> personajes = new HashSet<>();
+
+    private boolean deleted = Boolean.FALSE;
+
+    //Añadir Personaje
+    public void addPersonaje(PersonajeEntity personaje) {
+        this.personajes.add(personaje);
+    }
+
+    //Eliminar Personaje
+    public void removePersonaje(PersonajeEntity personaje) {
+        this.personajes.remove(personaje);
+    }
 
 }

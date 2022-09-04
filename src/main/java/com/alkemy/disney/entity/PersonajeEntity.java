@@ -27,13 +27,17 @@ public class PersonajeEntity {
 
     private String historia;
 
-    @ManyToMany(
-            mappedBy = "personajes",
-            fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
+    @ManyToMany(mappedBy = "personajes", fetch = FetchType.LAZY)
     private Set<PeliculaEntity> peliculas = new HashSet<>();
+
+    //Añadir Personaje
+    public void addPelicula(PeliculaEntity pelicula) {
+        this.peliculas.add(pelicula);
+    }
+
+    //Eliminar Personaje
+    public void removePelicula(PeliculaEntity pelicula) {
+        this.peliculas.remove(pelicula);
+    }
 
 }
