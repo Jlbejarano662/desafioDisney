@@ -1,5 +1,6 @@
 package com.alkemy.disney.mapper;
 
+import com.alkemy.disney.dto.PeliculaBasicaDTO;
 import com.alkemy.disney.dto.PeliculaDTO;
 import com.alkemy.disney.dto.PersonajeDTO;
 import com.alkemy.disney.entity.PeliculaEntity;
@@ -18,11 +19,6 @@ public class PeliculaMapper {
 
     @Autowired
     private PersonajeMapper personajeMapper;
-
-    //@Autowired
-    //public PeliculaMapper(PersonajeMapper personajeMapper) {
-        //this.personajeMapper = personajeMapper;
-    //}
 
     public LocalDate string2LocalDate(String stringDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyy-MM-dd");
@@ -45,10 +41,10 @@ public class PeliculaMapper {
         return peliculaDTO;
     }
 
-    public List<PeliculaDTO> peliculaEntityList2DTOList(Set<PeliculaEntity> peliculas, boolean cargarPeliculas) {
+    public List<PeliculaDTO> peliculaEntityList2DTOList(Set<PeliculaEntity> peliculas, boolean cargarPersonajes) {
         List<PeliculaDTO> peliculaDTOS = new ArrayList<>();
         for (PeliculaEntity peliculaEntity: peliculas) {
-            peliculaDTOS.add(this.peliculaEntity2DTO(peliculaEntity,cargarPeliculas));
+            peliculaDTOS.add(this.peliculaEntity2DTO(peliculaEntity,cargarPersonajes));
         }
         return peliculaDTOS;
     }
@@ -76,7 +72,24 @@ public class PeliculaMapper {
                 peliculaEntity.addPersonaje(personajeMapper.personajeDTO2Entity(personajeDTO, false));
             }
         }
+        peliculaEntity.setGeneroId(peliculaDTO.getGeneroId());
         return peliculaEntity;
+    }
+
+    public List<PeliculaBasicaDTO> peliculaEntityList2DTOBasicList(List<PeliculaEntity> peliculaEntities) {
+        List<PeliculaBasicaDTO> peliculaBasicaDTOS = new ArrayList<>();
+        for (PeliculaEntity peliculaEntity : peliculaEntities) {
+            peliculaBasicaDTOS.add(this.peliculaEntityDTOBasico(peliculaEntity));
+        }
+        return peliculaBasicaDTOS;
+    }
+
+    private PeliculaBasicaDTO peliculaEntityDTOBasico(PeliculaEntity peliculaEntity) {
+        PeliculaBasicaDTO peliculaBasicaDTO = new PeliculaBasicaDTO();
+        peliculaBasicaDTO.setImagen(peliculaEntity.getImagen());
+        peliculaBasicaDTO.setTitulo(peliculaEntity.getTitulo());
+        peliculaBasicaDTO.setFechaCreacion(peliculaEntity.getFechaCreacion().toString());
+        return peliculaBasicaDTO;
     }
 
 }

@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("generos")
@@ -32,4 +31,5 @@ public class GeneroController {
      GeneroDTO generoGuardado = generoService.save(generoDTO);
      return ResponseEntity.status(HttpStatus.CREATED).body(generoGuardado);
     }
+
 }

@@ -1,5 +1,6 @@
 package com.alkemy.disney.controller;
 
+import com.alkemy.disney.dto.PeliculaBasicaDTO;
 import com.alkemy.disney.dto.PeliculaDTO;
 import com.alkemy.disney.service.PeliculaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,31 @@ public class PeliculaController {
     public ResponseEntity<PeliculaDTO> save(@RequestBody PeliculaDTO peliculaDTO) {
         PeliculaDTO resultado = peliculaService.save(peliculaDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+    }
+
+    //Filtra el listado de peliculas
+    @GetMapping
+    public ResponseEntity<List<PeliculaBasicaDTO>> getDetailsByFilters(
+            @RequestParam(required = false) String titulo,
+            @RequestParam(required = false) Long genero,
+            @RequestParam(required = false, defaultValue = "ASC") String orden
+    ) {
+        List<PeliculaBasicaDTO> peliculaBasicaDTOS = peliculaService.getDetailsByFilters(titulo, genero, orden);
+        return ResponseEntity.ok().body(peliculaBasicaDTOS);
+    }
+
+    //Añadir un personaje
+    @PostMapping("/{idPelicula}/personaje/{idPersonaje}")
+    public ResponseEntity<Void> addPersonaje(@PathVariable Long idPelicula, @PathVariable Long idPersonaje) {
+        peliculaService.addPersonaje(idPelicula, idPersonaje);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    //Eliminar un personaje
+    @DeleteMapping("/{idPelicula}/personaje/{idPersonaje}")
+    public ResponseEntity<Void> removePersonaje(@PathVariable Long idPelicula, @PathVariable Long idPersonaje) {
+        peliculaService.removePersonaje(idPelicula,idPersonaje);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
